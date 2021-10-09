@@ -3,6 +3,28 @@ import sys
 
 class Solution:
     def solve(self, N):
+        #------------------------------------------
+        # 配るDP : 現在の値を基にして、次の場所の準備をする
+        #------------------------------------------
+        dp = [[0] * N for _ in range(N)]
+        dp[0][0] = 1
+
+        for y in range(N):
+            for x in range(N):
+                if y + 1 < N:
+                    dp[y + 1][x] += dp[y][x]
+
+                if x + 1 < N:
+                    dp[y][x + 1] += dp[y][x]
+
+        for y in range(N):
+            print(dp[y])
+        return dp[N - 1][N - 1]
+
+    def solve_dp1(self, N):
+        #------------------------------------------
+        # 貰うDP : 現在の場所に必要な値を前回の場所から貰う
+        #------------------------------------------
 
         # 1
         #
