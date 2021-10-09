@@ -3,8 +3,8 @@ import sys
 
 class Solution:
     def solve(self, A):
-        dp = [[0] * 4 for i in range(3)]
-        dp.insert(0, A)
+        dp = [[0] * 4 for i in range(4)]
+        dp[0] = A
         for y in range(1, 4):
             for x in range(4):
                 if x - 1 >= 0:
