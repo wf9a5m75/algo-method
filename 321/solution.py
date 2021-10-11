@@ -1,6 +1,6 @@
 import math
 def isPrime(N):
-    if N < 3:
+    if N <= 3:
         if N > 1:
             return True
         return False
