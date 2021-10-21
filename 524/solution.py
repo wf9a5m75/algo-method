@@ -2,39 +2,49 @@ from io import StringIO
 import sys
 
 
-def heapify(A):
+def max_heapify(A, x, N):
+    k = x
+    while(k < N):
+        parent = k
+        left = 2 * k + 1
+        right = left + 1
+
+        largest = parent
+        if (left < N) and (A[parent] < A[left]):
+            largest = left
+        if (right < N) and (A[largest] < A[right]):
+            largest = right
+        if (largest == parent):
+            break
+        else:
+            A[parent], A[largest] = A[largest], A[parent]
+            k = largest
+            x -= 1
+
+def build_max_heap(A):
     N = len(A)
-    x = (N >> 1) - 1
+    X = (N >> 1) - 1
 
-    while (x >= 0):
+    for k in range(X, -1, -1):
+        max_heapify(A, k, N)
+    return A
 
-        k = x
-        while(k < N):
-            parent = k
-            left  = 2 * k + 1
-            right = 2 * k + 2
+def heapsort(A, breakPoint):
+    A = build_max_heap(A)
+    N = len(A)
 
-            largest = parent
-
-            if (left < N) and (A[k] < A[left]):
-                largest = left
-
-            if (right < N) and (A[largest] < A[right]):
-                largest = right
-
-            if (largest != parent):
-                A[parent], A[largest] = A[largest], A[parent]
-                k = largest
-            else:
-                break
-        x -= 1
+    for i in range(N - 1, 0, -1):
+        A[0], A[i] = A[i], A[0]
+        max_heapify(A, 0, i)
+        if (i == breakPoint):
+            print(*A)
     return A
 
 def main():
-
-    N = int(input())
+    N, M = list(map(int, input().split()))
     A = list(map(int, input().split()))
-    print(*heapify(A))
+
+    print(*heapsort(A, M))
 
 
 
