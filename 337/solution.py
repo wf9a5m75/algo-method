@@ -4,20 +4,26 @@ import sys
 
 class Solution:
     def solve(self, N, M, W):
+        # N, M = list(map(int, input().split()))
+        # W = list(map(int, input().split()))
+
         dp = [[False] * (M + 1) for _ in range(N + 1)]
+
+        # 最初に何も入れていない状態は成立する
         dp[0][0] = True
 
-        for m in range(M):
-            for i in range(N):
-                if not dp[i][m]:
-                    continue
-                dp[i + 1][m] = True
-                if (m + W[i] <= M):
-                    dp[i + 1][m + W[i]] = True
+        # 1つずつボールを試していく
+        for i in range(N):
+            # 前の状態のときにTrueのものだけを処理する
+            for m in range(M + 1):
+                if dp[i][m]:
+                    # ボールを入れなかったとき
+                    dp[i + 1][m] = True
 
-        # for i in range(N):
-        #     print(dp[i])
-        return "Yes" if dp[N][M] else "No"
+                    # ボールを入れても合計の重さがMを超えないとき
+                    if m + W[i] <= M:
+                        dp[i + 1][m + W[i]] = True
+        print("Yes" if dp[N][M] else "No")
 
 
 
