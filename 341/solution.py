@@ -3,19 +3,31 @@ import sys
 
 class Solution:
     def solve(self, N, M, A, B):
-        dp = [[0] * M for i in range(N)]
-        dp[0][0] = 1
-        for n in range(N - 1):
-            for m in range(M):
-                if dp[n][m] == 0:
-                    continue
-                dp[n + 1][m] = max(dp[n + 1][m], dp[n][m])
-                if m + A[n] < M:
-                    dp[n + 1][m + A[n]] = max(dp[n + 1][m + A[n]], dp[n][m] + B[n])
+        dp = [[-1] * (M) for _ in range(N)]
 
-        # for n in range(N):
-        #     print(dp[n])
-        return dp[N - 1][M - 1] - 1
+        # 最初は左上にいる
+        dp[0][0] = 0
+
+        for i in range(N - 1):
+            for m in range(M):
+
+                # もし前の状態が成立しない場合はskip
+                if dp[i][m] == -1:
+                    continue
+
+                # 1つ下のマスに移動する
+                # 別の処理で先に数字が入っていることがあるので、最大値を採用する
+                dp[i + 1][m] = max(dp[i + 1][m], dp[i][m])
+
+                # (あるならば)1つ下、Aiつ右のマスに移動し、Biポイントを得る
+                if (m + A[i] < M):
+                    dp[i + 1][m + A[i]] = max(dp[i + 1][m + A[i]], dp[i][m] + B[i])
+
+        # for i in range(N):
+        #     print(*dp[i])
+
+        # 右下がゴールなので、右下だけをチェックすればOK
+        return dp[N - 1][M - 1]
 
 def main():
     N, M = list(map(int, input().strip().split()))
