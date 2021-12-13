@@ -1,21 +1,35 @@
 from io import StringIO
 import sys
+from collections import defaultdict
 
 class Solution:
     def solve(self, N, M, weights, values):
-        dp = [[-1] * (M + 1) for _ in range(N + 1)]
-        dp[0][0] = 0
 
-        for n in range(N):
-            for m in range(M + 1):
-                if dp[n][m] < -1:
-                    continue
+        currS = {0: 0}
 
-                dp[n + 1][m] = max(dp[n + 1][m], dp[n][m])
+        # ボールを1つずつ試す
+        for i in range(N):
+            nextS = defaultdict(int)
+            # 前の状態が成立するケースだけを試す
+            for m in currS:
 
-                if m + weights[n] <= M:
-                    dp[n + 1][m + weights[n]] = max(dp[n + 1][m + weights[n]], dp[n][m] + values[n])
-        return max(dp[N])
+                # ボールを入れなかったとき
+                nextS[m] = max(nextS[m], currS[m])
+
+                # ボールを入れても合計がM以下の場合
+                if m + A[i] <= M:
+                    nextS[m + A[i]] = max(nextS[m + A[i]], currS[m] + B[i])
+
+            #print(*nextS)
+
+            # 現在の状態を次の状態とする
+            currS = nextS
+
+        # 最大値を返す
+        maxW = 0
+        for m in currS:
+            maxW = max(maxW, currS[m])
+        return maxW
 
 
 def main():
