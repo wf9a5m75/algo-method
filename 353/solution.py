@@ -2,20 +2,31 @@ from io import StringIO
 import sys
 
 class Solution:
-    def solve(self, N, A):
-        M = sum(A)
-        dp = [[False] * (M + 1) for _ in range(N + 1)]
+    def solve(self, N, W):
+        # 起こりうる最大の差（片方の箱に全てのボールを入れた場合）
+        maxW = sum(W)
 
+        dp = [[False] * (maxW + 1) for _ in range(N + 1)]
+
+        # 最初何も持っていない状態からスタート
         dp[0][0] = True
-        for n in range(N):
-            for m in range(M + 1):
-                if not dp[n][m]:
-                    continue
-                dp[n + 1][m + A[n]] = True
-                dp[n + 1][abs(m - A[n])] = True
-        # for i in range(N + 1):
-        #     print(dp[i])
 
+        # ボールを1つずつ試していく
+        for i in range(N):
+
+            # j は AとBの箱の総和
+            for j in range(maxW + 1):
+
+                if (dp[i][j] == False):
+                    continue
+
+                # Aの箱にボールを入れた場合
+                dp[i + 1][j + W[i]] = True
+
+                # Aの箱にボールを「入れなかった」場合
+                dp[i + 1][abs(j - W[i])] = True
+
+        # 答え
         res = 0
         while not dp[N][res]:
             res += 1
