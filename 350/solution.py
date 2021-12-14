@@ -1,27 +1,35 @@
 from io import StringIO
 import sys
+from collections import defaultdict
 
 class Solution:
     def solve(self, N, MaxW, weights):
-        INF = 1000000
-        dp = [[INF] * (MaxW + 1) for _ in range(N + 1)]
-        dp[0][0] = 0
+        currS = {0: 0}
 
+        # ボールを1つずつ試していく
+        for i in range(N):
 
-        for n in range(N):
-            for m in range(MaxW + 1):
-                if dp[n][m] == INF:
-                    continue
-                dp[n + 1][m] = min(dp[n + 1][m], dp[n][m])
+            # 次の状態の領域
+            nextS = defaultdict(lambda: 100000000000)
 
-                if (m + weights[n] <= MaxW):
-                    dp[n + 1][m + weights[n]] = min(dp[n + 1][m + weights[n]], dp[n][m] + 1)
+            # 前の状態が成立するケースのみ試す
+            for m in currS:
+                # ボールを入れない
+                nextS[m] = min(nextS[m], currS[m])
 
-        # for n in range(N + 1):
-        #     print(dp[n])
-        if dp[N][MaxW] == INF:
+                # ボールを入れられるとき入れる
+                if m + W[i] <= M:
+                    nextS[m + W[i]] = min(nextS[m + W[i]], currS[m] + 1)
+
+            currS = nextS
+
+        if M in currS:
+            # 重さの合計がMになる組み合わせが存在する
+            return currS[M]
+        else:
+            # 組み合わせが存在しない
             return -1
-        return dp[N][MaxW]
+
 def main():
     N, M = list(map(int, input().strip().split()))
     W = list(map(int, input().strip().split()))
