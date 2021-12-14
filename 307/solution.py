@@ -3,15 +3,11 @@ import sys
 
 
 class Solution:
-    def solve(self, A):
-        sizeA = len(A)
-        dp = [0] * (sizeA + 1)
-
-        for i in range(sizeA):
-            dp[i + 1] = max(dp[i], dp[i] + A[i])
-        return dp[sizeA]
-
-
+    def solve(self, nums):
+        ans = 0
+        for num in nums:
+        	ans = max(ans, ans + num)
+        return ans
 
 def main():
     n = int(input())
