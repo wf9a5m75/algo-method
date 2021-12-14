@@ -1,22 +1,28 @@
 from io import StringIO
 import sys
+from collections import defaultdict
 
 class Solution:
     def solve(self, N, A, B, X):
-        dp = [[False] * (A + 1) for _ in range(N + 1)]
-        dp[0][0] = True
 
-        for x in range(N):
-            for a in range(A + 1):
-                if not dp[x][a]:
-                    continue
-                dp[x + 1][a] = True
+        # まずは何もカードを持っていない状態からスタート
+        currS = {0: True}
 
-                r = (a + X[x]) % A
-                dp[x + 1][r] = True
-        # for x in range(N):
-        #     print(dp[x])
-        return "Yes" if dp[N][B] else "No"
+        # カードを1枚ずつ試す
+        for i in range(N):
+            nextS = defaultdict(bool)
+
+            for m in currS:
+                # カードを選ばない
+                nextS[m] |= currS[m]
+
+                # カードを追加した場合
+                tmp = (m + X[i]) % A
+                nextS[tmp] |= True
+
+            currS = nextS
+
+        return "Yes" if currS[B] else "No"
 
 def main():
     N, A, B = list(map(int, input().strip().split()))
